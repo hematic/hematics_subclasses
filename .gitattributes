@@ -1,0 +1,10 @@
+# Never apply EOL conversion inside packs. The .ldb/MANIFEST files are binary,
+# and CURRENT must keep its LF — with CRLF, LevelDB looks for "MANIFEST-000134\r"
+# and fails to open the compendium.
+packs/** -text
+
+# Keep repo-only files out of the released module.zip (git archive)
+.github        export-ignore
+.gitattributes export-ignore
+.gitignore     export-ignore
+.todo          export-ignore

@@ -1,0 +1,18 @@
+# Foundry LevelDB lock files
+packs/*/LOCK
+
+# LevelDB debug logs — regenerated on every Foundry start, not pack data.
+# NB: lowercase *.log files ARE data (write-ahead log) and must stay tracked.
+packs/*/LOG
+packs/*/LOG.old
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Node (if you ever add build tooling)
+node_modules/

@@ -1,0 +1,52 @@
+{
+  "id": "hematics-subclasses",
+  "title": "Hematic's Subclasses",
+  "description": "A collection of homebrew subclasses for D&D 5e.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "hematic",
+      "discord": "hematic",
+      "url": "https://github.com/hematic"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      { "id": "dnd5e", "type": "system" }
+    ]
+  },
+  "packs": [
+    {
+      "name": "subclasses",
+      "label": "Subclasses",
+      "path": "packs/subclasses",
+      "type": "Item",
+      "system": "dnd5e"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Hematic's Magic Modules",
+      "sorting": "a",
+      "packs": [],
+      "folders": [
+        {
+          "name": "Subclasses",
+          "sorting": "a",
+          "packs": ["subclasses"]
+        }
+      ]
+    }
+  ],
+  "url": "https://github.com/hematic/hematics_subclasses",
+  "manifest": "https://raw.githubusercontent.com/hematic/hematics_subclasses/main/module.json",
+  "download": "https://github.com/hematic/hematics_subclasses/releases/latest/download/module.zip",
+  "readme": "https://github.com/hematic/hematics_subclasses/blob/main/README.md",
+  "changelog": "https://github.com/hematic/hematics_subclasses/blob/main/CHANGELOG.md",
+  "bugs": "https://github.com/hematic/hematics_subclasses/issues",
+  "license": "MIT"
+}

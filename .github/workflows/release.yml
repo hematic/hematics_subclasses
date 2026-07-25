@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['module.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Read version from module.json
+        id: manifest
+        run: |
+          version=$(jq -r '.version' module.json)
+          if [ -z "$version" ] || [ "$version" = "null" ]; then
+            echo "::error::module.json has no version field"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "Manifest version: $version"
+
+      - name: Skip if tag already exists
+        id: check
+        run: |
+          tag="${{ steps.manifest.outputs.tag }}"
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "Tag $tag already exists — version was not bumped. Nothing to do."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pin download URL to this release's asset
+        if: steps.check.outputs.proceed == 'true'
+        run: |
+          url="https://github.com/${{ github.repository }}/releases/download/${{ steps.manifest.outputs.tag }}/module.zip"
+          jq --arg url "$url" '.download = $url' module.json > module.json.tmp
+          mv module.json.tmp module.json
+
+      - name: Build module.zip
+        if: steps.check.outputs.proceed == 'true'
+        run: |
+          # Archive tracked files only (honours .gitignore and .gitattributes export-ignore),
+          # flat at the zip root as Foundry expects.
+          git archive --format=zip --output=module.zip HEAD
+          # Replace the manifest entry with the version-pinned one built above.
+          zip module.zip module.json
+
+          # Assert the replacement actually took, and that the layout is flat.
+          got=$(unzip -p module.zip module.json | jq -r '.download')
+          want="https://github.com/${{ github.repository }}/releases/download/${{ steps.manifest.outputs.tag }}/module.zip"
+          if [ "$got" != "$want" ]; then
+            echo "::error::manifest inside zip has download='$got', expected '$want'"
+            exit 1
+          fi
+          if unzip -l module.zip | grep -qE ' [^ ]+/module\.json$'; then
+            echo "::error::module.json is nested rather than at the zip root"
+            exit 1
+          fi
+          unzip -l module.zip | head -30
+
+      - name: Extract release notes from CHANGELOG.md
+        if: steps.check.outputs.proceed == 'true'
+        run: |
+          version="${{ steps.manifest.outputs.version }}"
+          # Literal string matching, not regex — dots in the version would otherwise
+          # act as wildcards and the brackets as a character class.
+          awk -v hdr="## [$version]" '
+            index($0, hdr) == 1     { found = 1; next }
+            found && index($0, "## [") == 1 { exit }
+            found                   { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "No CHANGELOG entry for $version." > notes.md
+          fi
+          cat notes.md
+
+      - name: Create tag and release
+        if: steps.check.outputs.proceed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.manifest.outputs.tag }}"
+          git tag "$tag" "${{ github.sha }}"
+          git push origin "$tag"
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes-file notes.md \
+            module.zip module.json
