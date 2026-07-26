@@ -2,6 +2,12 @@
 
 All notable changes to Hematic's Subclasses will be documented here.
 
+## [1.1.0] - 2026-07-25
+### Changed
+- Full feature automation and resource integration for all five subclasses
+  (The Gladiator, Threshold Domain, Oath of the Scourge, Elemental Conduit,
+  and Choir of the Wronged)
+
 ## [1.0.1] - 2026-07-25
 ### Added
 - The Gladiator (Fighter)
