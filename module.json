@@ -2,7 +2,7 @@
   "id": "hematics-subclasses",
   "title": "Hematic's Subclasses",
   "description": "A collection of homebrew subclasses for D&D 5e.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
