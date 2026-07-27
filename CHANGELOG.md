@@ -2,6 +2,13 @@
 
 All notable changes to Hematic's Subclasses will be documented here.
 
+## [1.2.0] - 2026-07-26
+### Added
+- Journals compendium for subclass documentation
+
+### Changed
+- Updates to the subclasses
+
 ## [1.1.0] - 2026-07-25
 ### Changed
 - Full feature automation and resource integration for all five subclasses
