@@ -9,8 +9,8 @@
  *  -1d4 penalty on the Dreaded creature's attack rolls.
  *
  *  This is a PERSISTENT registration (runs every world load), so it belongs in
- *  the module's code, not a run-once macro. See the accompanying
- *  "module-json-instructions.txt" for how to load it.
+ *  the module's code, not a run-once macro. It is wired in via the module.json
+ *  "esmodules" field.
  *
  *  The -1d4 attack keys were copied from the working 'bane' spell on this
  *  system (system.bonuses.<type>.attack). Dread applies the penalty to attacks
