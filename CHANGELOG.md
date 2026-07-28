@@ -2,6 +2,10 @@
 
 All notable changes to Hematic's Subclasses will be documented here.
 
+## [1.3.1] - 2026-07-26
+### Changed
+- Work in progress on a rework of the Oath of the Scourge
+
 ## [1.3.0] - 2026-07-26
 ### Added
 - Dread condition for the Oath of the Scourge: a first-class, clickable token
